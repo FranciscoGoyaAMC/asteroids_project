@@ -31,6 +31,10 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  #Cria o jogador no centro da tela
     asteroid_field = AsteroidField()  #Inicia o campo de asteroide
 
+    #Inicializa o score do jogo
+    score = 0
+    font = pygame.font.Font(None, 36)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -48,13 +52,14 @@ def main():
         #Verifica colisão entre o player e os asteroides
         for asteroid in asteroids:
             if player.check_collision(asteroid):
-                print("Game over!")
+                print("Game over! Final Score:", score)
                 return  #Sai do jogo
         
         #Verifica colisão entre asteroides e balas
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.check_collision(shot):  #Se colidir
+                    score += asteroid.get_score()  #Atualiza o score
                     asteroid.split()  #Divide o asteroide
                     shot.kill()  #Destrói a bala
 
@@ -62,6 +67,10 @@ def main():
         
         for obj in drawable:  #Desenha todos os objetos do grupo "drawable"
             obj.draw(screen)
+
+        #Desenha o score na tela
+        score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
 
         pygame.display.flip()  #Atualiza a tela
         dt = clock.tick(60) / 1000 # Controla o FPS e calcula o delta time

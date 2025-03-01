@@ -7,6 +7,16 @@ class Asteroid(CircleShape):
     """Inicializa um novo asteroide na posição (x, y) com um raio específico"""
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius) #Chama o construtor da classe pai
+
+
+    def get_score(self):
+        """Determina quantidade de pontos de acordo com o tamanho do asteroide"""
+        if self.radius > ASTEROID_MIN_RADIUS * 2:
+            return 100  #Asteroide grande
+        elif self.radius > ASTEROID_MIN_RADIUS:
+            return 50  #Asteroide medio
+        else:
+            return 20  #Asteroide pequeno
     
 
     def draw(self, screen):
