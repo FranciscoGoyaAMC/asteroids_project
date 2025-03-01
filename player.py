@@ -8,6 +8,14 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS) #Chama o construtor da classe pai
         self.rotation = 0 #Rotação inicial
         self.shoot_timer = 0 #Inicializa o timer do cooldown das balas em 0
+        self.lives = 3  #Inicializa com 3 vidas
+        self.respawn(x, y)  #Respawna o jogador na posição inicial
+
+    def respawn(self, x, y):
+        """Respawna o jogador"""
+        self.position = pygame.Vector2(x, y)  #Reseta a posição para o centro da tela
+        self.velocity = pygame.Vector2(0, 0)  #Reseta a velocidade
+        self.rotation = 0  #Reseta a rotação
 
 
     def triangle(self):

@@ -52,8 +52,12 @@ def main():
         #Verifica colisão entre o player e os asteroides
         for asteroid in asteroids:
             if player.check_collision(asteroid):
-                print("Game over! Final Score:", score)
-                return  #Sai do jogo
+                player.lives -= 1  #Diminui uma vida
+                if player.lives > 0:
+                    player.respawn(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  #Respawna o jogador
+                else:
+                    print("Game over! Final Score:", score)
+                    return  #Encerra o jogo se o jogador perde as 3 vidas
         
         #Verifica colisão entre asteroides e balas
         for asteroid in asteroids:
@@ -71,6 +75,10 @@ def main():
         #Desenha o score na tela
         score_text = font.render(f"Score: {score}", True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
+
+        #Mostra a quantidade de vidas na tela
+        lives_text = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
+        screen.blit(lives_text, (SCREEN_WIDTH - 100, 10))
 
         pygame.display.flip()  #Atualiza a tela
         dt = clock.tick(60) / 1000 # Controla o FPS e calcula o delta time
