@@ -15,11 +15,27 @@ def main():
     clock = pygame.time.Clock()
     dt = 0 #Delta time (tempo entre frames)
 
+    def reset_game():
+        """Função para reiniciar o jogo"""
+        nonlocal game_over, player, asteroid_field, score
+        game_over = False
+        score = 0
+
+        #Reinicializa os grupos
+        updatable.empty()
+        drawable.empty()
+        asteroids.empty()
+        shots.empty()
+
+        #Recria os objetos do jogo
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        asteroid_field = AsteroidField()
+
     #Criação dos grupos de objetos
     updatable = pygame.sprite.Group() #Objetos que serão atualizados
     drawable = pygame.sprite.Group()  #Objetos que serão desenhados
     asteroids = pygame.sprite.Group() #Grupo específico para asteroides
-    shots = pygame.sprite.Group()  # Grupo de balas
+    shots = pygame.sprite.Group()  #Grupo de balas
 
     #Configura os containers para os objetos do jogo
     Player.containers = (updatable, drawable)
@@ -31,14 +47,39 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  #Cria o jogador no centro da tela
     asteroid_field = AsteroidField()  #Inicia o campo de asteroide
 
-    #Inicializa o score do jogo
+    #Inicializa os objetos do jogo
+    player = None
+    asteroid_field = None
     score = 0
     font = pygame.font.Font(None, 36)
+
+    #Variável de controle do estado do jogo
+    game_over = False
+    reset_game()
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return  #Sai do loop se o usuário fechar a janela
+        
+        if game_over:
+            #Exibe tela de Game Over e espera input para reiniciar
+            screen.fill((0, 0, 0))
+            game_over_text = font.render(f"Game Over! Score: {score}", True, (255, 255, 255))
+            retry_text = font.render("Pressione 'R' para reiniciar", True, (255, 255, 255))
+            
+            screen.blit(game_over_text, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 20))
+            screen.blit(retry_text, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 20))
+            
+            pygame.display.flip()
+
+            #Aguarda o jogador pressionar "R" para reiniciar
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_r]:
+                reset_game()
+            
+            clock.tick(30)  #Reduz a taxa de atualização enquanto aguarda input
+            continue  #Pula o restante do loop e volta para a verificação de eventos
         
         #Cria o disparo
         keys = pygame.key.get_pressed()
@@ -56,8 +97,7 @@ def main():
                 if player.lives > 0:
                     player.respawn(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  #Respawna o jogador
                 else:
-                    print("Game over! Final Score:", score)
-                    return  #Encerra o jogo se o jogador perde as 3 vidas
+                    game_over = True  #Sinaliza o fim do jogo
         
         #Verifica colisão entre asteroides e balas
         for asteroid in asteroids:
