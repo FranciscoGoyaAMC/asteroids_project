@@ -32,8 +32,9 @@ Um clone do clássico jogo **Asteroids**, desenvolvido em **Python** com a bibli
    ```
 
 ## ⌨️ Controles
-- **Seta para cima** - Acelerar a nave.
-- **Setas esquerda/direita** - Rotacionar a nave.
+- **W** - Acelerar a nave.
+- **A/D** - Rotacionar a nave.
+- **S** - Dar ré.
 - **Barra de espaço** - Atirar.
 - **Tecla R** - Reiniciar o jogo após o Game Over.
 
